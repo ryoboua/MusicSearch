@@ -1,0 +1,4 @@
+Application name	MusicSearch
+API key	1c23b546288836b5727e9ec3875c4003
+Shared secret	f1f67800dae16675c3621543004ab284
+Registered to	ryoboua

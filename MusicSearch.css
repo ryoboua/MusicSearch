@@ -1,0 +1,277 @@
+/*  CSS Document                             */
+
+html {
+	/*height: 100%;*/
+	/*rgb(241, 241, 241);*/
+	/*background: radial-gradient(circle, rgb(241, 241, 241) 20%, #8E415B);
+	background-size: cover;*/
+}
+body {margin: 0; padding: 0; font-size: 16px; font-family: Arial; background-color: #F1F1F1; }
+
+header{
+	background-color: #8C2057;
+}
+h1{
+	margin: 0 auto;
+	text-align: center;
+	font-family: 'Lobster', cursive;
+	padding: 20px 0;
+	background-color: #8C2057;
+	color: #ECF0F1;
+	font-size: 46px;
+}
+
+form{
+	display: flex;
+	text-align: center;
+	padding: 0 10px 10px;
+}
+.input_text {
+	flex-basis: 80%;
+	padding: 1em;
+	box-sizing: border-box;
+	font-family: 'Fjalla One', sans-serif;
+
+	/*background-color: white;
+  background-image: url('searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  padding-left: 40px;*/
+}
+
+.button{
+	flex-basis: 20%;
+	background-color: black;
+	border: none;
+	color: white;
+	padding: 1em;
+	text-decoration: none;
+	cursor: pointer;
+	font-family: 'Fjalla One', sans-serif;
+
+}
+/*Pressing effect*/
+/*.button:active{
+	background:#1333A6;
+	top: 4px;
+	box-shadow: 0px 0px rgba(0, 0, 0, 0.5);
+}*/
+
+
+.display_title{
+	display: none;
+	font-family: 'Fjalla One', sans-serif;
+	padding: 1em;
+	color: #111111;
+}
+.display_title_album{
+	display: none;
+	font-family: 'Fjalla One', sans-serif;
+	padding: 0em 0 0 10px;
+	color: #111111;
+	order: 1;
+	flex-basis: 100%
+}
+.bio_title{
+	display: none;
+	font-family: 'Fjalla One', sans-serif;
+	padding: 1em;
+	color: #111111;
+	flex-wrap: wrap;
+	flex-basis: 100%;
+	padding: 10px 10px 0px;
+	margin: 0px;
+}
+
+.artist_wrap, .album_wrap {
+	margin: 1em auto;
+	width: 95%;
+	background-color: #FFFFFF;
+	box-shadow: 0px 10px 10px rgba(0,0,0, 0.2);
+	}
+.artist_info_wrap, .album_info_wrap {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 1em auto;
+	width: 95%;
+	background-color: #FFFFFF;
+	box-shadow: 0px 10px 10px rgba(0,0,0, 0.2);
+	}
+
+	.artist_list, .album_list{
+		list-style: none;
+		padding: 0px 10px;
+	}
+	.top_album_list{
+		list-style: none;
+		padding: 0px 10px;
+		order: 2;
+	}
+
+.artist, .album {
+	display: inline-block;
+	position: relative;
+	width: 50%;
+	/*justify-content: space-around;*/
+	font-family: 'Fjalla One', sans-serif;
+	font-size: 1.2em;
+	overflow: hidden;
+	/*background: linear-gardient( rgba(0, 0, 0, 0.7));*/
+
+	/*background-color: #3BB4C1;
+	box-shadow: 0px 10px 15px rgba(0,0,0, 0.2);*/
+}
+
+
+.information{
+	top: 50%;
+  left: 5px;
+	position:absolute;
+}
+.album_name, .artist_name{
+	display: inline-block;
+	color: white;
+	background: rgb(0, 0, 0); /* fallback color */
+	background: rgba(0, 0, 0, 0.7);
+	padding: 10px;
+	margin: 0 auto;
+}
+
+.listeners{
+	color: white;
+	background: rgb(0, 0, 0); /* fallback color */
+	background: rgba(0, 0, 0, 0.7);
+	padding: 10px;
+	font-size: 13px;
+	margin: 0px;
+	display: table;
+}
+
+.image{
+width: 100%;
+}
+
+.image_album_info, .image_artist_info{
+display: flex;
+flex-basis: 50%;
+width: 50%;
+flex-wrap: wrap;
+
+}
+.image_artist_info{
+display: flex;
+flex-basis: 50%;
+width: 50%;
+flex-wrap: wrap;
+border-radius: 150px;
+
+}
+.album_title{
+	display: flex;
+	width: 50%;
+	flex-basis: 50%;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+.bio{
+  padding: 0em 10px 1em 10px;
+	text-align: justify;
+	font-family: 'Noto Sans', sans-serif;
+	margin-bottom: 0px;
+}
+
+.artist_title{
+	font-family: 'Fjalla One', sans-serif;
+	padding: 0 0 0 10px;
+	color: #111111;
+	margin: 0;
+	padding-top: 1em;
+}
+
+.album_info_wrap .display_title, .artist_info_wrap .display_title {
+	font-family: 'Fjalla One', sans-serif;
+	padding: 1em 0 0 10px;
+	margin: 0;
+	color: #111111;
+}
+.display_title_artist {
+	font-family: 'Fjalla One', sans-serif;
+	padding: 0 0 0 10px;
+	align-self: center;
+	margin: 0;
+	color: #111111;
+	flex-basis: 50%
+}
+.info_header{
+		display: flex;
+    flex-basis: 100%;
+		height: 200px;
+}
+
+.tracklist{
+	flex-basis: 95%;
+	padding: 0;
+	list-style: none;
+	flex-grow: 1;
+}
+
+.track {
+	padding: 1em 1em;
+	font-family: 'Fjalla One', sans-serif;
+
+}
+
+.track:nth-child(2n){
+	background-color: #F1F1F1;
+	border-top: 1px solid grey;
+	border-bottom: 1px solid grey;
+}
+@media (min-width: 600px){
+
+	.info_header{
+		height: 300px;
+	}
+	.image{
+		transform: scale(1);
+		transition: all linear 0.3s;
+		filter: grayscale(100%);
+
+	}
+
+	.image:hover{
+		transform: scale(1.2);
+		filter: grayscale(0%);
+	}
+
+	.artist_wrap, .album_wrap, .artist_info_wrap, .album_info_wrap{
+		width: 80%;
+	}
+
+h2{
+	font-size: 40px;
+}
+h3{
+	font-size: 30px;
+}
+.bio{
+	font-size: 20px;
+}
+
+.display_title_album{
+	    margin: 5px 0px;
+}
+}
+
+@media (min-width: 1140px){
+
+	.info_header{
+		height: 410px;
+	}
+
+	.top_album_list{
+		margin: 30px auto;
+    width: 90%;
+	}
+
+}

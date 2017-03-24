@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta id="view" name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1"/>
+		<meta name="description" content="Website that compares songs, album or artist radio playtime to know who more popular.">
+    <meta name="author" content="Reggie">
+		<link rel="stylesheet" type="text/css" href="normalize.css"/>
+		<link rel="stylesheet" type="text/css" href="MusicSearch.css"/>
+		<link href="https://fonts.googleapis.com/css?family=Fjalla+One|Noto+Sans|Lobster" rel="stylesheet">
+		<!-- <script src="https://use.fontawesome.com/0601c0f6df.js"></script> -->
+
+		<title>MusicSearch</title>
+	</head>
+	<body>
+<header>
+	<h1 class="title">MusicSearch</h1>
+
+	<form action="">
+		<input class="input_text" type="text" name="AAsearch" value="Kendrick" placeholder="Enter Artist or Album">
+		<input class="button" type="submit" value="SEARCH" >
+	</form>
+
+</header>
+
+<section class='artist_wrap'>
+<h2 class ="display_title">Artists</h2>
+	<ul class="artist_list"></ul>
+</section>
+
+<section class="album_wrap">
+	<h2 class ="display_title">Albums</h2>
+	<ul class="album_list"></ul>
+</section>
+
+<section class="artist_info_wrap"></section>
+
+<section class="album_info_wrap">
+</section>
+	</body>
+
+	<footer>
+		<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="MusicSearch.js"></script>
+	</footer>
+</html>
