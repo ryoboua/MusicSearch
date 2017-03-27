@@ -30,9 +30,16 @@ function handleSubmit(e){
   var $formValues = $(this).serializeArray()
  	searchRequest = $formValues[0].value;
 	resetHighlight()
- 	$('.display_title').show()
-	artistSearch(searchRequest);
-	albumSearch(searchRequest);
+
+  if(searchRequest !== ''){
+    $('.display_title').show()
+    artistSearch(searchRequest);
+    albumSearch(searchRequest);
+  }
+  else{
+    alert("You need to enter the name of an artist or album in the search bar");
+    reset();
+  }
 
 }
 
@@ -82,34 +89,40 @@ function artistSearch(artist){
 		var noIdCount =0;
 		var IdCount = 0;
     var listeners = 0;
-		while(count < 4){
-			mbid = data.results.artistmatches.artist[i].mbid;
 
-			// console.log("Array:",mbidArray);
+    if(Object.keys(results).length === 0){
+      alert("Unable to find information on artist requested ¯\_(ツ)_/¯")
+    }
+  else{
 
-			if (mbid == ""){
-				noIdCount++
-				i++
+      while(count < 4){
+      mbid = data.results.artistmatches.artist[i].mbid;
 
-			}
 
-			else{
-				name = data.results.artistmatches.artist[i].name;
-				imageLink = data.results.artistmatches.artist[i].image[3]['#text'];
-				mbid = data.results.artistmatches.artist[i].mbid;
+      if (mbid == ""){
+        noIdCount++
+        i++
+      }
+
+      else{
+        name = data.results.artistmatches.artist[i].name;
+        imageLink = data.results.artistmatches.artist[i].image[3]['#text'];
+        mbid = data.results.artistmatches.artist[i].mbid;
         listeners = data.results.artistmatches.artist[i].listeners;
-				artistList(name,imageLink,mbid,listeners);
-				mbidArray.push(mbid);
-				IdCount++;
-				count++;
-				i++;
-			}
+        artistList(name,imageLink,mbid,listeners);
+        mbidArray.push(mbid);
+        IdCount++;
+        count++;
+        i++;
+      }
 
-		if(i == 20) return
-		inArray = mbidArray.indexOf(mbid);
-		}
+      if(i == 20) return
+      inArray = mbidArray.indexOf(mbid);
+    }
+  }
 	})
 	.error(function(error){
+    alert(error.responseText + 'Please contact your network administrator');
 		console.log(error);
 	})
 }
@@ -122,6 +135,7 @@ function albumSearch(album){
 	.done(albumSearchRefine)
 	.error(function(error){
 		console.log(error);
+    alert(error.responseText + 'Please contact your network administrator');
 	})
 }
 
@@ -136,28 +150,34 @@ function albumSearchRefine(data){
   		var noIdCount =0;
   		var IdCount = 0;
 
-  		while(count < 4){
-  			mbid = data.results.albummatches.album[i].mbid;
+      if(Object.keys(results).length === 0){
+        alert("Unable to find information on album requested ¯\_(ツ)_/¯")
+      } else{
 
-  			if (mbid == ""){
-  				noIdCount++
-  				i++
-  			}
+        while(count < 4){
+          mbid = data.results.albummatches.album[i].mbid;
 
-  			else{
-          // console.log(data);
-  				name = data.results.albummatches.album[i].name;
-  				imageLink = data.results.albummatches.album[i].image[2]['#text'];
-  				mbid = data.results.albummatches.album[i].mbid;
-          artist =  data.results.albummatches.album[i].artist;
-  				albumList(name,imageLink,mbid,artist);
-  				IdCount++;
-  				count++;
-  				i++;
-  			}
+          if (mbid == ""){
+            noIdCount++
+            i++
+          }
 
-  		if(i == 20) return
-  		}
+          else{
+            // console.log(data);
+            name = data.results.albummatches.album[i].name;
+            imageLink = data.results.albummatches.album[i].image[2]['#text'];
+            mbid = data.results.albummatches.album[i].mbid;
+            artist =  data.results.albummatches.album[i].artist;
+            albumList(name,imageLink,mbid,artist);
+            IdCount++;
+            count++;
+            i++;
+          }
+
+          if(i == 20) return
+        }
+      }
+
 }
 
 function albumCollectionSearchRefine(data){
@@ -170,7 +190,6 @@ function albumCollectionSearchRefine(data){
 
   		while(count < 4){
   			mbid = data.topalbums.album[i].mbid;
-        console.log(mbid);
   			if (typeof mbid === 'undefined'){
   				i++;
           noIdCount++;
@@ -181,7 +200,7 @@ function albumCollectionSearchRefine(data){
       collectionofalbums.push({
             albumname: data.topalbums.album[i].name,
             artist: data.topalbums.album[i].artist.name,
-            imageLink: data.topalbums.album[i].image[2]['#text'],
+            imageLink: data.topalbums.album[i].image[imageSize]['#text'],
             mbid: data.topalbums.album[i].mbid
           });
       //console.log('Array with MBID',i);
@@ -230,7 +249,6 @@ function topAlbumList (albums){
     $name.addClass('album_name')
     $name.text(albums[i].albumname);
 
- //  var $artist = $('<p>').addClass('listeners').text(albums[0].artist).appendTo($information);
   }
    $topAlbumList.appendTo($artist_info_wrap);
 }
@@ -308,6 +326,7 @@ function getArtistInfo(artist) {
 	})
 	.error(function(error){
 		console.log(error);
+    alert(error.responseText + 'Please contact your network administrator');
 	})
 
   $.ajax({
@@ -315,11 +334,12 @@ function getArtistInfo(artist) {
     url: APIPrefix + '?method=artist.gettopalbums&mbid=' + artist + '&limit=30&api_key=' + API_Key +'&format=json'
   })
   .done(function(data){
-    console.log(data);
     albumCollectionSearchRefine(data);
   })
   .error(function (error){
     console.log(error);
+    alert(error.responseText + 'Please contact your network administrator');
+
   })
 
 }
@@ -352,6 +372,7 @@ function getAlbumInfo(album){
 	})
 	.error(function(error){
 		console.log(error);
+    alert(error.responseText + 'Please contact your network administrator');
 	})
 }
 
@@ -396,8 +417,6 @@ function showAlbumInfo(albumName,artistName,albumimagelink,albumsummary,tracklis
                 .data("mbid",mbid)
               	.attr("mbid",mbid);
 
-  var summarysplit = albumsummary.split('<');
-  $albumsummary = $('<p>').text(summarysplit[0]).addClass('bio');
 
   $albumimage.appendTo($info_header);
   var $album_title = $('<div>').addClass('album_title').appendTo($info_header);
@@ -428,8 +447,19 @@ function showAlbumInfo(albumName,artistName,albumimagelink,albumsummary,tracklis
                             .addClass('bio_title')
                             .appendTo($album_info_wrap)
                             .show();
-  $albumsummary.appendTo($album_info_wrap);
 
+
+  var summary1 = albumsummary.split('<');
+  var summary2 = summary1[0].split('\n');
+      for(i=0;i<summary2.length;i++){
+        if(summary2[i] !== '')
+
+        $albumsummary = $('<p>')
+        .text(summary2[i])
+        .addClass('bio')
+        .appendTo($album_info_wrap);
+
+        }
 }
 
 function showArtistInfo(name,imageLink,bio){
@@ -459,11 +489,15 @@ function showArtistInfo(name,imageLink,bio){
                                     .appendTo($artist_info_wrap)
                                     .show();
 
+  var bio2 = bio.split('\n');
+    for(i=0; i<bio2.length; i++){
+      if(bio2[i] !== '')
+        var $p = $('<p>')
+        .text(bio2[i])
+        .addClass('bio')
+        .appendTo($artist_info_wrap);
+      }
 
-	var $p = $('<p>')
-                  .text(bio)
-                  .addClass('bio')
-                  .appendTo($artist_info_wrap);
 // slipt on \n
 }
 
@@ -484,7 +518,6 @@ function addCommas(nStr)
 
   // media query event handler
   if (matchMedia) {
-    console.log(matchMedia)
     var mq = window.matchMedia("(min-width: 600px)");
     mq.addListener(WidthChange);
     WidthChange(mq);
@@ -494,12 +527,10 @@ function addCommas(nStr)
   function WidthChange(mq) {
     if (mq.matches) {
       // window width is at least 600px
-      imageSize = 4;
-      console.log(imageSize);
+      imageSize = 3;
     } else {
       // window width is less than 600px
       imageSize = 2;
-      console.log(imageSize);
     }
 
   }

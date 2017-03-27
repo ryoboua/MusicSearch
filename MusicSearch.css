@@ -274,7 +274,19 @@ h3{
 
 	.top_album_list{
 		margin: 30px auto;
-    width: 90%;
+    width: 70%;
+	}
+
+	.image_artist_info, .image_album_info{
+		flex-basis: 40%;
+	}
+
+	.album_title{
+		flex-basis: 60%;
+	}
+	.display_title_artist{
+		flex-basis: 60%;
+		font-size: 60px;
 	}
 
 }
