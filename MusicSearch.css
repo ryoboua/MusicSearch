@@ -272,6 +272,10 @@ h3{
 		height: 410px;
 	}
 
+	.artist_list, .album_list{
+		margin: 0 50px;
+	}
+
 	.top_album_list{
 		margin: 30px auto;
     width: 70%;

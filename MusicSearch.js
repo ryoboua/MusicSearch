@@ -77,7 +77,6 @@ function artistSearch(artist){
 		url: APIPrefix + '?method=artist.search&artist=' + artist + '&limit=20&api_key=' + API_Key +'&format=json'
 	})
 	.done(function(data){
-    // console.log(data);
 		var results = data.results.artistmatches.artist;
 		var name;
 		var imageLink;
