@@ -1,0 +1,2 @@
+- Need to put a place holder for artists and albums with no image link
+- When you search new artist like 6black or Dave East they do not show up because they have no mbid, however I do received an object of results

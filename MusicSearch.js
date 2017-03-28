@@ -133,7 +133,7 @@ function artistSearch(artist){
     //console.log(data);
 
     if(Object.keys(results).length === 0){
-      alert("Unable to find information on artist requested ¯\_(ツ)_/¯")
+      alert("Unable to find information on artist requested ¯\\_(ツ)_/¯")
     }
     else{
   // Out of all the results given back I only choose to display 4
