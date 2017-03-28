@@ -12,12 +12,13 @@ var imageSize;
 
 
 $(document).ready(function(){
+  $('.input_text').focus();
   listenForFormSubmit();
   listenForArtistClick();
   listenForAlbumClick();
   listenSelectionSlideToggle();
-  screenWidth()
-  reset();
+  listenforMusicSearchClick();
+  screenWidth();
 });
 
 function listenForFormSubmit(){
@@ -44,7 +45,14 @@ function handleSubmit(e){
 }
 
 function reset(){
-	 $('.input_text').focus();
+ $('.input_text').val('');
+ $('.input_text').focus();
+ $('.artist_list').empty();
+ $('.album_list').empty();
+ $album_wrap.show();
+ $artist_wrap.show();
+ $artist_info_wrap.empty();
+ $album_info_wrap.empty();
 }
 
 function resetHighlight(){
@@ -63,6 +71,9 @@ function listenSelectionSlideToggle(){
   $('.album_wrap').on('click','.display_title',AlbumSlideToggle);
 }
 
+function listenforMusicSearchClick(){
+  $('.title').on('click', reset);
+}
 function ArtistSlideToggle(){
 	$('.artist').slideToggle();
 }
@@ -89,6 +100,7 @@ function artistSearch(artist){
 		var IdCount = 0;
     var listeners = 0;
 
+    console.log(data);
     if(Object.keys(results).length === 0){
       alert("Unable to find information on artist requested ¯\_(ツ)_/¯")
     }
@@ -105,7 +117,7 @@ function artistSearch(artist){
 
       else{
         name = data.results.artistmatches.artist[i].name;
-        imageLink = data.results.artistmatches.artist[i].image[3]['#text'];
+        imageLink = data.results.artistmatches.artist[i].image[imageSize]['#text'];
         mbid = data.results.artistmatches.artist[i].mbid;
         listeners = data.results.artistmatches.artist[i].listeners;
         artistList(name,imageLink,mbid,listeners);
@@ -116,7 +128,6 @@ function artistSearch(artist){
       }
 
       if(i == 20) return
-      inArray = mbidArray.indexOf(mbid);
     }
   }
 	})
@@ -131,7 +142,10 @@ function albumSearch(album){
 		method: 'GET',
 		url: APIPrefix + '?method=album.search&album=' + album + '&limit=20&api_key=' + API_Key +'&format=json'
 	})
-	.done(albumSearchRefine)
+	.done(function(data){
+    //console.log(data);
+    albumSearchRefine(data);
+  })
 	.error(function(error){
 		console.log(error);
     alert(error.responseText + 'Please contact your network administrator');
@@ -148,7 +162,6 @@ function albumSearchRefine(data){
   		var i = 0;
   		var noIdCount =0;
   		var IdCount = 0;
-
       if(Object.keys(results).length === 0){
         alert("Unable to find information on album requested ¯\_(ツ)_/¯")
       } else{
@@ -164,7 +177,7 @@ function albumSearchRefine(data){
           else{
             // console.log(data);
             name = data.results.albummatches.album[i].name;
-            imageLink = data.results.albummatches.album[i].image[2]['#text'];
+            imageLink = data.results.albummatches.album[i].image[imageSize]['#text'];
             mbid = data.results.albummatches.album[i].mbid;
             artist =  data.results.albummatches.album[i].artist;
             albumList(name,imageLink,mbid,artist);
@@ -496,8 +509,6 @@ function showArtistInfo(name,imageLink,bio){
         .addClass('bio')
         .appendTo($artist_info_wrap);
       }
-
-// slipt on \n
 }
 
 function addCommas(nStr)

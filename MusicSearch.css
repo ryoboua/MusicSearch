@@ -1,17 +1,12 @@
 /*  CSS Document                             */
 
-html {
-	/*height: 100%;*/
-	/*rgb(241, 241, 241);*/
-	/*background: radial-gradient(circle, rgb(241, 241, 241) 20%, #8E415B);
-	background-size: cover;*/
-}
+
 body {margin: 0; padding: 0; font-size: 16px; font-family: Arial; background-color: #F1F1F1; }
 
 header{
 	background-color: #8C2057;
 }
-h1{
+.title{
 	margin: 0 auto;
 	text-align: center;
 	font-family: 'Lobster', cursive;
@@ -19,6 +14,7 @@ h1{
 	background-color: #8C2057;
 	color: #ECF0F1;
 	font-size: 46px;
+	cursor: pointer;
 }
 
 form{
@@ -26,17 +22,12 @@ form{
 	text-align: center;
 	padding: 0 10px 10px;
 }
+
 .input_text {
 	flex-basis: 80%;
 	padding: 1em;
 	box-sizing: border-box;
 	font-family: 'Fjalla One', sans-serif;
-
-	/*background-color: white;
-  background-image: url('searchicon.png');
-  background-position: 10px 10px;
-  background-repeat: no-repeat;
-  padding-left: 40px;*/
 }
 
 .button{
@@ -48,15 +39,7 @@ form{
 	text-decoration: none;
 	cursor: pointer;
 	font-family: 'Fjalla One', sans-serif;
-
 }
-/*Pressing effect*/
-/*.button:active{
-	background:#1333A6;
-	top: 4px;
-	box-shadow: 0px 0px rgba(0, 0, 0, 0.5);
-}*/
-
 
 .display_title{
 	display: none;
@@ -112,14 +95,9 @@ form{
 	display: inline-block;
 	position: relative;
 	width: 50%;
-	/*justify-content: space-around;*/
 	font-family: 'Fjalla One', sans-serif;
 	font-size: 1.2em;
 	overflow: hidden;
-	/*background: linear-gardient( rgba(0, 0, 0, 0.7));*/
-
-	/*background-color: #3BB4C1;
-	box-shadow: 0px 10px 15px rgba(0,0,0, 0.2);*/
 }
 
 
@@ -149,6 +127,7 @@ form{
 
 .image{
 width: 100%;
+cursor: pointer;
 }
 
 .image_album_info, .image_artist_info{
@@ -187,6 +166,7 @@ border-radius: 150px;
 	color: #111111;
 	margin: 0;
 	padding-top: 1em;
+	cursor: pointer;
 }
 
 .album_info_wrap .display_title, .artist_info_wrap .display_title {
@@ -194,6 +174,7 @@ border-radius: 150px;
 	padding: 1em 0 0 10px;
 	margin: 0;
 	color: #111111;
+	width: 100%;
 }
 .display_title_artist {
 	font-family: 'Fjalla One', sans-serif;
@@ -216,10 +197,9 @@ border-radius: 150px;
 	flex-grow: 1;
 }
 
-.track {
+.track{
 	padding: 1em 1em;
 	font-family: 'Fjalla One', sans-serif;
-
 }
 
 .track:nth-child(2n){
