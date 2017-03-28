@@ -1,4 +1,6 @@
 /*  JavaScript Document                      */
+// API provided by last.fm
+
 var searchRequest;
 var APIPrefix = "http://ws.audioscrobbler.com/2.0/";
 var API_Key = "1c23b546288836b5727e9ec3875c4003";
@@ -21,17 +23,38 @@ $(document).ready(function(){
   screenWidth();
 });
 
+// Event listener functions
+function listenSelectionSlideToggle(){
+  $('.artist_wrap').on('click','.display_title',ArtistSlideToggle);
+  $('.album_wrap').on('click','.display_title',AlbumSlideToggle);
+}
+
+function listenforMusicSearchClick(){
+  $('.title').on('click', reset);
+}
+
 function listenForFormSubmit(){
   $('form').on('submit',handleSubmit);
 }
 
+function listenForArtistClick(){
+  $('.artist_list').on('click','.artist',handleArtist);
+  $('.album_info_wrap').on('click','.album_title .artist_title',handleArtist);
+}
+
+function listenForAlbumClick(){
+  $('.album_list').on('click','.album',handleAlbum);
+  $('.artist_info_wrap').on('click','.top_album_list .album',handleAlbum)
+}
+
+// The next 3 functions handle the users request and pass it along to the API functions
 function handleSubmit(e){
   e.preventDefault();
 
   var $formValues = $(this).serializeArray()
  	searchRequest = $formValues[0].value;
 	resetHighlight()
-
+ // Do a check to see if text was entered in the input field before sending it off to the API function
   if(searchRequest !== ''){
     $('.display_title').show()
     artistSearch(searchRequest);
@@ -44,6 +67,19 @@ function handleSubmit(e){
 
 }
 
+function handleArtist(e){
+  var selectedArtistmbid = $(this).attr('mbid');
+  getArtistInfo(selectedArtistmbid);
+
+}
+
+function handleAlbum(e){
+
+  var selectedAlbummbid = $(this).attr('mbid');
+  getAlbumInfo(selectedAlbummbid);
+}
+
+// Reset functions
 function reset(){
  $('.input_text').val('');
  $('.input_text').focus();
@@ -66,258 +102,87 @@ function resetHighlight(){
 	$album_info_wrap.empty();
 }
 
-function listenSelectionSlideToggle(){
-  $('.artist_wrap').on('click','.display_title',ArtistSlideToggle);
-  $('.album_wrap').on('click','.display_title',AlbumSlideToggle);
-}
-
-function listenforMusicSearchClick(){
-  $('.title').on('click', reset);
-}
+// The next two function toggle the artist and album list
 function ArtistSlideToggle(){
-	$('.artist').slideToggle();
+  $('.artist').slideToggle();
 }
 
 function AlbumSlideToggle(){
-	$('.album').slideToggle();
+  $('.album').slideToggle();
 }
 
+// API GET functions
 function artistSearch(artist){
-	$.ajax({
-		method: 'GET',
-		url: APIPrefix + '?method=artist.search&artist=' + artist + '&limit=20&api_key=' + API_Key +'&format=json'
-	})
-	.done(function(data){
-		var results = data.results.artistmatches.artist;
-		var name;
-		var imageLink;
-		var mbid;
-		var mbidArray = [];
-		var inArray;
-		var count = 0;
-		var i = 0;
-		var noIdCount =0;
-		var IdCount = 0;
+  $.ajax({
+    method: 'GET',
+    url: APIPrefix + '?method=artist.search&artist=' + artist + '&limit=20&api_key=' + API_Key +'&format=json'
+  })
+  .done(function(data){
+    var results = data.results.artistmatches.artist;
+    var name;
+    var imageLink;
+    var mbid;
+    var mbidArray = [];
+    var inArray;
+    var count = 0;
+    var i = 0;
+    var noIdCount =0;
+    var IdCount = 0;
     var listeners = 0;
 
-    console.log(data);
+    //console.log(data);
+
     if(Object.keys(results).length === 0){
       alert("Unable to find information on artist requested ¯\_(ツ)_/¯")
     }
-  else{
-
+    else{
+  // Out of all the results given back I only choose to display 4
+  // By changing the number (4) in the WHILE condition one can change the amount displayed
+  // This WHILE loop and IF function check to see if the artist has a mbid which is important to get more information on the artist
+  // If the artist does not have a mbid then I do not add it to the artist list
       while(count < 4){
-      mbid = data.results.artistmatches.artist[i].mbid;
-
-
-      if (mbid == ""){
-        noIdCount++
-        i++
-      }
-
-      else{
-        name = data.results.artistmatches.artist[i].name;
-        imageLink = data.results.artistmatches.artist[i].image[imageSize]['#text'];
         mbid = data.results.artistmatches.artist[i].mbid;
-        listeners = data.results.artistmatches.artist[i].listeners;
-        artistList(name,imageLink,mbid,listeners);
-        mbidArray.push(mbid);
-        IdCount++;
-        count++;
-        i++;
-      }
 
-      if(i == 20) return
+        if (mbid == ""){
+          noIdCount++
+          i++
+        }
+
+        else{
+          name = data.results.artistmatches.artist[i].name;
+          imageLink = data.results.artistmatches.artist[i].image[imageSize]['#text'];
+          mbid = data.results.artistmatches.artist[i].mbid;
+          listeners = data.results.artistmatches.artist[i].listeners;
+          artistList(name,imageLink,mbid,listeners);
+          mbidArray.push(mbid);
+          IdCount++;
+          count++;
+          i++;
+        }
+
+        if(i == 20) return
+      }
     }
-  }
-	})
-	.error(function(error){
+  })
+  .error(function(error){
     alert(error.responseText + 'Please contact your network administrator');
-		console.log(error);
-	})
+    console.log(error);
+  })
 }
 
 function albumSearch(album){
-	$.ajax({
-		method: 'GET',
-		url: APIPrefix + '?method=album.search&album=' + album + '&limit=20&api_key=' + API_Key +'&format=json'
-	})
-	.done(function(data){
+  $.ajax({
+    method: 'GET',
+    url: APIPrefix + '?method=album.search&album=' + album + '&limit=20&api_key=' + API_Key +'&format=json'
+  })
+  .done(function(data){
     //console.log(data);
     albumSearchRefine(data);
   })
-	.error(function(error){
-		console.log(error);
+  .error(function(error){
+    console.log(error);
     alert(error.responseText + 'Please contact your network administrator');
-	})
-}
-
-function albumSearchRefine(data){
-
-  		var results = data.results.albummatches.album;
-  		var name;
-  		var imageLink;
-  		var mbid;
-  		var count = 0;
-  		var i = 0;
-  		var noIdCount =0;
-  		var IdCount = 0;
-      if(Object.keys(results).length === 0){
-        alert("Unable to find information on album requested ¯\_(ツ)_/¯")
-      } else{
-
-        while(count < 4){
-          mbid = data.results.albummatches.album[i].mbid;
-
-          if (mbid == ""){
-            noIdCount++
-            i++
-          }
-
-          else{
-            // console.log(data);
-            name = data.results.albummatches.album[i].name;
-            imageLink = data.results.albummatches.album[i].image[imageSize]['#text'];
-            mbid = data.results.albummatches.album[i].mbid;
-            artist =  data.results.albummatches.album[i].artist;
-            albumList(name,imageLink,mbid,artist);
-            IdCount++;
-            count++;
-            i++;
-          }
-
-          if(i == 20) return
-        }
-      }
-
-}
-
-function albumCollectionSearchRefine(data){
-  		var mbid;
-  		var count = 0;
-  		var i = 0;
-      var collectionofalbums =[];
-      var noIdCount = 0;
-      var IdCount = 0;
-
-  		while(count < 4){
-  			mbid = data.topalbums.album[i].mbid;
-  			if (typeof mbid === 'undefined'){
-  				i++;
-          noIdCount++;
-  			}
-
-  			else{
-
-      collectionofalbums.push({
-            albumname: data.topalbums.album[i].name,
-            artist: data.topalbums.album[i].artist.name,
-            imageLink: data.topalbums.album[i].image[imageSize]['#text'],
-            mbid: data.topalbums.album[i].mbid
-          });
-      //console.log('Array with MBID',i);
-      IdCount++;
-  		count++;
-  		i++;
-  			}
-      //  console.log('i',i);
-      //  console.log('count', count);
-  		if(i == 30) return topAlbumList(collectionofalbums);
-  		}
-
-    //  console.log('i',i);
-    //  console.log('count', count);
-      topAlbumList(collectionofalbums);
-}
-
-function topAlbumList (albums){
-
-  var $h2 = $('<h2>')
-              .text('Albums')
-              .addClass('display_title_album')
-	            .appendTo($artist_info_wrap)
-	            .show();
-
-  var $topAlbumList = $('<ul>').addClass('top_album_list');
-
-  for(i=0; i < albums.length; i++){
-
-    var $img = $('<img>');
-    var $name = $('<p>');
-    var $album = $('<li>')
-    var $information = $('<div>');
-
-    $album.addClass('album');
-    $album.attr("mbid",albums[i].mbid);
-    $album.appendTo($topAlbumList);
-
-    $img.appendTo($album);
-    $img.addClass('image')
-    $img.attr('src',albums[i].imageLink);
-
-    $information.addClass('information').appendTo($album);
-
-    $name.appendTo($information);
-    $name.addClass('album_name')
-    $name.text(albums[i].albumname);
-
-  }
-   $topAlbumList.appendTo($artist_info_wrap);
-}
-
-function artistList (name, imageLink, mbid, listeners){
-
-	var $img = $('<img>');
-	var $name = $('<p>');
-	var $artist = $('<li>')
-  var $information = $('<div>');
-
-  var listen = addCommas(listeners)
-
-	$artist.addClass('artist');
-	$artist.data("mbid",mbid);
-	$artist.attr("mbid",mbid);
-	$artist.appendTo($artist_list);
-	$artist.hide()
-
-	$img.appendTo($artist);
-	$img.attr('src',imageLink);
-  $img.addClass('image')
-
-  $information.addClass('information').appendTo($artist);
-
-	$name.appendTo($information);
-	$name.addClass('artist_name')
-	$name.text(name);
-
-  var $listeners = $('<p>').addClass('listeners').text(listen + ' listeners').appendTo($information);
-}
-
-function albumList (name,imageLink,mbid,artist){
-
-	var $img = $('<img>');
-	var $name = $('<p>');
-	var $album = $('<li>')
-  var $information = $('<div>');
-
-	$album.addClass('album');
-	$album.data("mbid",mbid);
-	$album.attr("mbid",mbid);
-	$album.appendTo($album_list);
-	$album.hide();
-
-	$img.appendTo($album);
-	$img.addClass('image')
-	$img.attr('src',imageLink);
-
-  $information.addClass('information').appendTo($album);
-
-	$name.appendTo($information);
-	$name.addClass('album_name')
-	$name.text(name);
-
-  var $artist = $('<p>').addClass('listeners').text(artist).appendTo($information);
-
+  })
 }
 
 function getArtistInfo(artist) {
@@ -388,27 +253,141 @@ function getAlbumInfo(album){
 	})
 }
 
-function listenForArtistClick(){
-  $('.artist_list').on('click','.artist',handleArtist);
-  $('.album_info_wrap').on('click','.album_title .artist_title',handleArtist);
+// The next two functions process the album data provide from the API_Key
+// Some albums don't have mbid which have to be removed
+function albumSearchRefine(data){
+
+  		var results = data.results.albummatches.album;
+  		var name;
+  		var imageLink;
+  		var mbid;
+  		var count = 0;
+  		var i = 0;
+  		var noIdCount =0;
+  		var IdCount = 0;
+      if(Object.keys(results).length === 0){
+        alert("Unable to find information on album requested ¯\\_(ツ)_/¯")
+      } else{
+
+        while(count < 4){
+          mbid = data.results.albummatches.album[i].mbid;
+
+          if (mbid == ""){
+            noIdCount++
+            i++
+          }
+
+          else{
+            // console.log(data);
+            name = data.results.albummatches.album[i].name;
+            imageLink = data.results.albummatches.album[i].image[imageSize]['#text'];
+            mbid = data.results.albummatches.album[i].mbid;
+            artist =  data.results.albummatches.album[i].artist;
+            albumList(name,imageLink,mbid,artist);
+            IdCount++;
+            count++;
+            i++;
+          }
+  // if i gets to 20 and count is still not at 4 I exit the loop
+  // It also means that most of the results did not have mbids
+          if(i == 20) return
+        }
+      }
+
 }
 
-function listenForAlbumClick(){
-	$('.album_list').on('click','.album',handleAlbum);
-  $('.artist_info_wrap').on('click','.top_album_list .album',handleAlbum)
+function albumCollectionSearchRefine(data){
+  		var mbid;
+  		var count = 0;
+  		var i = 0;
+      var collectionofalbums =[];
+      var noIdCount = 0;
+      var IdCount = 0;
+
+  		while(count < 4){
+  			mbid = data.topalbums.album[i].mbid;
+  			if (typeof mbid === 'undefined'){
+  				i++;
+          noIdCount++;
+  			}
+
+  			else{
+
+      collectionofalbums.push({
+            albumname: data.topalbums.album[i].name,
+            artist: data.topalbums.album[i].artist.name,
+            imageLink: data.topalbums.album[i].image[imageSize]['#text'],
+            mbid: data.topalbums.album[i].mbid
+          });
+      IdCount++;
+  		count++;
+  		i++;
+  			}
+    // if i gets to 30 and count is still not at 4 I exit the loop
+   // And pass the collectionofalbums to topAlbumList
+  		if(i == 30) return topAlbumList(collectionofalbums);
+  		}
+      topAlbumList(collectionofalbums);
 }
 
-function handleArtist(e){
-	var selectedArtistmbid = $(this).attr('mbid');
-  getArtistInfo(selectedArtistmbid);
+// The next 4 function append their respect information (function name) to the HTML file
+function artistList (name, imageLink, mbid, listeners){
+
+  var $artist = $('<li>')
+                .addClass('artist')
+                .attr("mbid",mbid)
+                .appendTo($artist_list)
+                .hide();
+
+  var $img = $('<img>')
+              .attr('src',imageLink)
+              .addClass('image')
+              .appendTo($artist);
+
+  var $information = $('<div>')
+                      .addClass('information')
+                      .appendTo($artist);
+
+  var $name = $('<p>')
+              .text(name)
+              .addClass('artist_name')
+              .appendTo($information);
+
+  var listen = addCommas(listeners);
+
+  var $listeners = $('<p>')
+                      .addClass('listeners')
+                      .text(listen + ' listeners')
+                      .appendTo($information);
+}
+
+function albumList (name,imageLink,mbid,artist){
+
+  var $img = $('<img>');
+  var $name = $('<p>');
+  var $album = $('<li>')
+  var $information = $('<div>');
+
+  $album.addClass('album');
+  $album.data("mbid",mbid);
+  $album.attr("mbid",mbid);
+  $album.appendTo($album_list);
+  $album.hide();
+
+  $img.appendTo($album);
+  $img.addClass('image')
+  $img.attr('src',imageLink);
+
+  $information.addClass('information').appendTo($album);
+
+  $name.appendTo($information);
+  $name.addClass('album_name')
+  $name.text(name);
+
+  var $artist = $('<p>').addClass('listeners').text(artist).appendTo($information);
 
 }
 
-function handleAlbum(e){
-
-	var selectedAlbummbid = $(this).attr('mbid');
-	getAlbumInfo(selectedAlbummbid);
-}
 function showAlbumInfo(albumName,artistName,albumimagelink,albumsummary,tracklistinfo,mbid){
 
 
@@ -511,6 +490,41 @@ function showArtistInfo(name,imageLink,bio){
       }
 }
 
+function topAlbumList (albums){
+
+  var $h2 = $('<h2>')
+              .text('Albums')
+              .addClass('display_title_album')
+	            .appendTo($artist_info_wrap)
+	            .show();
+
+  var $topAlbumList = $('<ul>').addClass('top_album_list');
+
+  for(i=0; i < albums.length; i++){
+
+    var $img = $('<img>');
+    var $name = $('<p>');
+    var $album = $('<li>')
+    var $information = $('<div>');
+
+    $album.addClass('album');
+    $album.attr("mbid",albums[i].mbid);
+    $album.appendTo($topAlbumList);
+
+    $img.appendTo($album);
+    $img.addClass('image')
+    $img.attr('src',albums[i].imageLink);
+
+    $information.addClass('information').appendTo($album);
+
+    $name.appendTo($information);
+    $name.addClass('album_name')
+    $name.text(albums[i].albumname);
+
+  }
+   $topAlbumList.appendTo($artist_info_wrap);
+}
+// The function was found online to add commas to long integers
 function addCommas(nStr)
   {
   	nStr += '';
